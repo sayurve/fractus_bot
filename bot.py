@@ -1,7 +1,7 @@
 import logging
 from aiogram import Bot, Dispatcher, executor, types
 from config import BOT_TOKEN
-from gpt import ask_gpt, http_client
+from gpt import ask_gpt
 import signal
 import sys
 
@@ -35,7 +35,6 @@ async def on_startup(dp):
 async def on_shutdown(dp):
     logger.info("Бот останавливается...")
     await bot.close()
-    await http_client.aclose()  # Закрываем HTTP клиент
 
 def handle_stop_signals(signum, frame):
     logger.info("Получен сигнал остановки, завершаем работу...")
