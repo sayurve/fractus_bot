@@ -1,17 +1,24 @@
+from openai import AsyncOpenAI
 import traceback
 from config import OPENAI_API_KEY
-from openai import AsyncOpenAI
 import httpx
 
-# Создаём кастомного клиента без прокси
-http_client = httpx.AsyncClient()
+# Создаем HTTP клиент без прокси
+http_client = httpx.AsyncClient(
+    proxies=None,  # Явно отключаем прокси
+    timeout=60.0   # Устанавливаем таймаут
+)
 
-client = AsyncOpenAI(api_key=OPENAI_API_KEY, http_client=http_client)
+# Создаем клиент OpenAI с нашим HTTP клиентом
+client = AsyncOpenAI(
+    api_key=OPENAI_API_KEY,
+    http_client=http_client
+)
 
 async def ask_gpt(prompt: str) -> str:
     try:
         response = await client.chat.completions.create(
-            model="gpt-4",  # временно можно заменить на "gpt-3.5-turbo"
+            model="gpt-3.5-turbo",  # Используем стабильную модель
             messages=[
                 {"role": "system", "content": "Ты умный и краткий ассистент, объясняй ясно."},
                 {"role": "user", "content": prompt}
