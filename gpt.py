@@ -1,3 +1,4 @@
+import traceback
 from openai import AsyncOpenAI
 from config import OPENAI_API_KEY
 
@@ -27,5 +28,5 @@ async def ask_gpt(prompt: str) -> str:
         
         return response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"GPT Error: {str(e)}")  # Логируем ошибку
-        return f"Извините, произошла ошибка при обработке вашего запроса: {str(e)}" 
+        print("GPT ERROR:", traceback.format_exc())  # Полный стек ошибки
+        return "Извините, произошла ошибка при обработке вашего запроса. Попробуйте позже." 
