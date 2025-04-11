@@ -1,6 +1,6 @@
-from openai import AsyncOpenAI
 import traceback
 from config import OPENAI_API_KEY
+from openai import AsyncOpenAI
 
 # Создаем клиент OpenAI
 client = AsyncOpenAI(api_key=OPENAI_API_KEY)
@@ -8,9 +8,9 @@ client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 async def ask_gpt(prompt: str) -> str:
     try:
         response = await client.chat.completions.create(
-            model="gpt-3.5-turbo",  # Используем более стабильную версию
+            model="gpt-4",  # или "gpt-3.5-turbo"
             messages=[
-                {"role": "system", "content": "Ты умный, вежливый и краткий финансовый ассистент. Отвечай понятно и полезно."},
+                {"role": "system", "content": "Ты краткий и полезный ассистент."},
                 {"role": "user", "content": prompt}
             ]
         )
