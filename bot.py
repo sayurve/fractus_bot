@@ -1,10 +1,11 @@
 import logging
 from aiogram import Bot, Dispatcher, executor, types
-from config import BOT_TOKEN
+from config import BOT_TOKEN, OPENAI_API_KEY
 from gpt import ask_gpt
 import signal
 import sys
 import traceback
+import os
 
 # Настройка логирования
 logging.basicConfig(
@@ -12,6 +13,15 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# Проверка переменных окружения
+if not BOT_TOKEN:
+    logger.error("⚠️ Ошибка: BOT_TOKEN не задан в переменных окружения!")
+    sys.exit(1)
+    
+if not OPENAI_API_KEY:
+    logger.error("⚠️ Ошибка: OPENAI_API_KEY не задан в переменных окружения!")
+    sys.exit(1)
 
 # Инициализация бота и диспетчера
 bot = Bot(token=BOT_TOKEN)
@@ -57,6 +67,8 @@ async def handle_ask(message: types.Message):
 async def on_startup(dp):
     try:
         logger.info("Бот запускается...")
+        logger.info(f"Текущая директория: {os.getcwd()}")
+        logger.info(f"Список файлов: {os.listdir('.')}")
         # Здесь можно добавить инициализацию базы данных или другие настройки
     except Exception as e:
         logger.error(f"Ошибка при запуске: {traceback.format_exc()}")
