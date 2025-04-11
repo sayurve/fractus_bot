@@ -1,11 +1,11 @@
 from openai import AsyncOpenAI
 from config import OPENAI_API_KEY
 
-# Инициализация клиента OpenAI
-client = AsyncOpenAI(api_key=OPENAI_API_KEY)
-
 async def ask_gpt(prompt: str) -> str:
     try:
+        # Создаем клиент для каждого запроса
+        client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+        
         response = await client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -17,9 +17,15 @@ async def ask_gpt(prompt: str) -> str:
                     "role": "user", 
                     "content": prompt
                 }
-            ]
+            ],
+            temperature=0.7,
+            max_tokens=1000
         )
+        
+        # Закрываем клиент после использования
+        await client.close()
+        
         return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"GPT Error: {str(e)}")  # Логируем ошибку
-        return "Извините, произошла ошибка при обработке вашего запроса. Попробуйте позже." 
+        return f"Извините, произошла ошибка при обработке вашего запроса: {str(e)}" 
